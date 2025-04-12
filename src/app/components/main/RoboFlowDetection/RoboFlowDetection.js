@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { InferenceEngine, CVImage } from "inferencejs";
-import style from "@/app/components/main/RoboFlowDetection/RoboFlowDetection.module.css";
+
+import style from '@/app/components/main/RoboFlowDetection/RoboFlowDetection.module.css'; // Opcional si tenés estilos externos
 
 function RoboFLowDetection() {
   const inferEngine = useMemo(() => new InferenceEngine(), []);
   const [modelWorkerId, setModelWorkerId] = useState(null);
   const [modelLoading, setModelLoading] = useState(false);
   const [detectedItems, setDetectedItems] = useState([]);
+  const [isRearCamera, setIsRearCamera] = useState(true);
 
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -30,46 +32,43 @@ function RoboFLowDetection() {
     if (modelWorkerId) {
       startWebcam();
     }
-  }, [modelWorkerId]);
+  }, [modelWorkerId, isRearCamera]);
 
   const startWebcam = () => {
     const constraints = {
-      audio: false,
       video: {
-        width: { ideal: 640 },
-        height: { ideal: 480 },
-        facingMode: "environment",
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        facingMode: isRearCamera ? { exact: "environment" } : "user",
       },
+      audio: false,
     };
 
-    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      const video = videoRef.current;
-      video.srcObject = stream;
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.onloadedmetadata = () => videoRef.current.play();
 
-      video.onloadedmetadata = () => {
-        video.play();
-      };
+          videoRef.current.onplay = () => {
+            const ctx = canvasRef.current.getContext("2d");
+            const height = videoRef.current.videoHeight;
+            const width = videoRef.current.videoWidth;
 
-      video.onplay = () => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
+            videoRef.current.width = width;
+            videoRef.current.height = height;
+            canvasRef.current.width = width;
+            canvasRef.current.height = height;
 
-        const updateSize = () => {
-          const width = video.videoWidth;
-          const height = video.videoHeight;
+            ctx.scale(1, 1);
 
-          video.width = width;
-          video.height = height;
-          canvas.width = width;
-          canvas.height = height;
-
-          ctx.scale(1, 1);
-        };
-
-        updateSize();
-        detectFrame();
-      };
-    });
+            detectFrame();
+          };
+        }
+      })
+      .catch((err) => {
+        console.error("Error al acceder a la cámara", err);
+      });
   };
 
   const detectFrame = () => {
@@ -77,10 +76,8 @@ function RoboFLowDetection() {
 
     const img = new CVImage(videoRef.current);
     inferEngine.infer(modelWorkerId, img).then((predictions) => {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const ctx = canvasRef.current.getContext("2d");
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
       const items = predictions.map((prediction) => {
         const { x, y, width, height } = prediction.bbox;
@@ -113,29 +110,77 @@ function RoboFLowDetection() {
     });
   };
 
+  const toggleCamera = () => {
+    setIsRearCamera((prev) => !prev);
+  };
+
   return (
-    <div className={style.container}>
-      <div className={style.wrapper}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100svh",
+        padding: "1rem",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "80vw",
+          height: "90svh",
+          overflow: "hidden",
+          borderRadius: "12px",
+          boxShadow: "0 0 20px rgba(0,0,0,0.2)",
+        }}
+      >
         <video
           ref={videoRef}
-          className={style.videoElement}
-          muted
-          playsInline
-        />
-        <canvas ref={canvasRef} className={style.canvasOverlay} />
-        <div
           style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
           }}
-        >
-          <h3>Objetos detectados:</h3>
-          <ul>
-            {detectedItems.map((item, index) => (
-              <li key={index}>
-                {item.label}: {item.confidence}%
-              </li>
-            ))}
-          </ul>
-        </div>
+          playsInline
+          muted
+        />
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+        />
+      </div>
+
+      <button
+        onClick={toggleCamera}
+        style={{
+          marginTop: "1rem",
+          padding: "0.5rem 1rem",
+          borderRadius: "8px",
+          border: "none",
+          background: "#111",
+          color: "white",
+          cursor: "pointer",
+        }}
+      >
+        Cambiar cámara
+      </button>
+
+      <div style={{ marginTop: "1rem" }}>
+        <h3>Objetos detectados:</h3>
+        <ul>
+          {detectedItems.map((item, index) => (
+            <li key={index}>
+              {item.label}: {item.confidence}%
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
