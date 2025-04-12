@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100svh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: black;
+}
+
+.wrapper {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+.videoElement {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100vw;
+  max-height: 100svh;
+  object-fit: contain;
+}
+
+.canvasOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 500px) {
+
+}

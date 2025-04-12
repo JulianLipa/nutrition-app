@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { InferenceEngine, CVImage } from "inferencejs";
+import style from "@/app/components/main/RoboFlowDetection/RoboFlowDetection.module.css";
 
 function RoboFLowDetection() {
   const inferEngine = useMemo(() => new InferenceEngine(), []);
   const [modelWorkerId, setModelWorkerId] = useState(null);
   const [modelLoading, setModelLoading] = useState(false);
+  const [detectedItems, setDetectedItems] = useState([]);
 
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -41,21 +43,30 @@ function RoboFLowDetection() {
     };
 
     navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      videoRef.current.srcObject = stream;
-      videoRef.current.onloadedmetadata = () => videoRef.current.play();
+      const video = videoRef.current;
+      video.srcObject = stream;
 
-      videoRef.current.onplay = () => {
-        const ctx = canvasRef.current.getContext("2d");
-        const height = videoRef.current.videoHeight;
-        const width = videoRef.current.videoWidth;
+      video.onloadedmetadata = () => {
+        video.play();
+      };
 
-        videoRef.current.width = width;
-        videoRef.current.height = height;
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
+      video.onplay = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
 
-        ctx.scale(1, 1);
+        const updateSize = () => {
+          const width = video.videoWidth;
+          const height = video.videoHeight;
 
+          video.width = width;
+          video.height = height;
+          canvas.width = width;
+          canvas.height = height;
+
+          ctx.scale(1, 1);
+        };
+
+        updateSize();
         detectFrame();
       };
     });
@@ -66,10 +77,12 @@ function RoboFLowDetection() {
 
     const img = new CVImage(videoRef.current);
     inferEngine.infer(modelWorkerId, img).then((predictions) => {
-      const ctx = canvasRef.current.getContext("2d");
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
 
-      predictions.forEach((prediction) => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const items = predictions.map((prediction) => {
         const { x, y, width, height } = prediction.bbox;
         const boxX = x - width / 2;
         const boxY = y - height / 2;
@@ -88,20 +101,41 @@ function RoboFLowDetection() {
         ctx.font = "15px monospace";
         ctx.fillStyle = "black";
         ctx.fillText(label, boxX, boxY - 10);
+
+        return {
+          label: prediction.class,
+          confidence: Math.round(prediction.confidence * 100),
+        };
       });
 
+      setDetectedItems(items);
       setTimeout(detectFrame, 100 / 3);
     });
   };
 
   return (
-    <div>
-      <div style={{ position: "relative" }}>
-        <video ref={videoRef} style={{ position: "relative" }} />
-        <canvas
-          ref={canvasRef}
-          style={{ position: "absolute", top: 0, left: 0 }}
+    <div className={style.container}>
+      <div className={style.wrapper}>
+        <video
+          ref={videoRef}
+          className={style.videoElement}
+          muted
+          playsInline
         />
+        <canvas ref={canvasRef} className={style.canvasOverlay} />
+        <div
+          style={{
+          }}
+        >
+          <h3>Objetos detectados:</h3>
+          <ul>
+            {detectedItems.map((item, index) => (
+              <li key={index}>
+                {item.label}: {item.confidence}%
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
