@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+.button{
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 10px;
+    transition: all .5s ease;
+}
+
+.button:hover{
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+}
+
+.cardComponent{
+    background-color: rgb(255, 255, 255);
+    width: 30vw;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5em;
+    border-radius: 35px;
+    color: black;
+}

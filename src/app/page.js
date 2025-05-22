@@ -1,11 +1,11 @@
 import Image from "next/image";
-import RoboFLowDetection from "@/app/components/main/RoboFlowDetection/RoboFlowDetection";
+import Test from "./components/main/RoboFlowDetection/Test";
 
 export default function Home() {
   return (
     <div>
       <main>
-        <RoboFLowDetection/>
+        <Test/>
       </main>
     </div>
   );
