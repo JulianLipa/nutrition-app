@@ -1,0 +1,47 @@
+{
+  "HomePage": {
+    "title": "Detector de comida",
+    "loading": "Cargando modelo...",
+
+
+    "bitterMelon": "Melón amargo",
+    "brinjal": "Berenjena",
+    "cabbage": "Repollo",
+    "calabash": "Calabaza",
+    "capsicum": "Pimiento",
+    "cauliflower": "Coliflor",
+    "cherry": "Cereza",
+    "garlic": "Ajo",
+    "ginger": "Jengibre",
+    "greenChili": "Ají verde",
+    "kiwi": "Kiwi",
+    "ladyFinger": "Okra",
+    "onion": "Cebolla",
+    "potato": "Papa",
+    "spongeGourd": "Luffa",
+    "tomato": "Tomate",
+    "apple": "Manzana",
+    "avocado": "Palta",
+    "banana": "Banana",
+    "cucumber": "Pepino",
+    "dragonFruit": "Fruta del dragón",
+    "egg": "Huevo",
+    "guava": "Guayaba",
+    "mango": "Mango",
+    "orange": "Naranja",
+    "oren": "Oren",
+    "peach": "Durazno",
+    "pear": "Pera",
+    "pineapple": "Piña",
+    "strawberry": "Frutilla",
+    "sugarApple": "Chirimoya",
+    "watermelon": "Sandía",
+
+    "calories": "Calorias",
+    "carbs": "Carbohidratos",
+    "fat": "Grasa",
+    "protein": "Proteina",
+
+    "back":"Volver"
+  }
+}

@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "axios": "^1.9.0",
+    "country-flag-icons": "^1.5.19",
     "inferencejs": "^1.0.21",
     "next": "15.2.4",
+    "next-intl": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0"
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/react": "19.1.5",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
     "tailwindcss": "^4"

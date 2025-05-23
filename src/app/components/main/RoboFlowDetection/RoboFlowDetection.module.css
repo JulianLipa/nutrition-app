@@ -31,11 +31,22 @@
   pointer-events: none;
 }
 
+.objectNutritionData{
+  background-color: white;
+  padding: 3vw 6vw;
+  border-radius: 25px;
+}
+
+.overlayBlack{
+  background-color: rgba(0,0,0,0.6);
+}
+
 .objectDetected {
   width: 80vw;
-  padding: 3vw 6vw;
-  background-color: white;
   color: black;
+  
+  background-color: white;
+  padding: 3vw 6vw;
   border-radius: 25px 25px 0 0;
 }
 

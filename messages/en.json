@@ -1,0 +1,46 @@
+{
+  "HomePage": {
+    "title": "Food detector",
+    "loading": "Loading model...",
+
+    "bitterMelon": "Bitter Melon",
+    "brinjal": "Brinjal",
+    "cabbage": "Cabbage",
+    "calabash": "Calabash",
+    "capsicum": "Capsicum",
+    "cauliflower": "Cauliflower",
+    "cherry": "Cherry",
+    "garlic": "Garlic",
+    "ginger": "Ginger",
+    "greenChili": "Green Chili",
+    "kiwi": "Kiwi",
+    "ladyFinger": "Lady Finger",
+    "onion": "Onion",
+    "potato": "Potato",
+    "spongeGourd": "Sponge Gourd",
+    "tomato": "Tomato",
+    "apple": "Apple",
+    "avocado": "Avocado",
+    "banana": "Banana",
+    "cucumber": "Cucumber",
+    "dragonFruit": "Dragon Fruit",
+    "egg": "Egg",
+    "guava": "Guava",
+    "mango": "Mango",
+    "orange": "Orange",
+    "oren": "Oren",
+    "peach": "Peach",
+    "pear": "Pear",
+    "pineapple": "Pineapple",
+    "strawberry": "Strawberry",
+    "sugarApple": "Sugar Apple",
+    "watermelon": "Watermelon",
+
+    "calories": "Calories",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "protein": "Protein",
+
+    "back": "Back"
+  }
+}
