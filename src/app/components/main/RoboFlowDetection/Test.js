@@ -221,6 +221,10 @@ export default function Test() {
 
             <div className="text-center mt-5">
               <h1 className="flex gap-1">
+                <p className="font-bold">{t(`${itemSelected.ingredient}`)}</p>
+              </h1>
+
+              <h1 className="flex gap-1">
                 <p className="font-bold">{t("calories")}:</p>
                 <p className="flex">
                   {itemSelected.nutrition?.calories}
