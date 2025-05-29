@@ -50,5 +50,8 @@
   border-radius: 25px 25px 0 0;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+  .objectNutritionData{
+    width: 80vw;
+  }
 }
