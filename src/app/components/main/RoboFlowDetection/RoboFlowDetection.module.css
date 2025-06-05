@@ -18,10 +18,10 @@
 .videoElement {
   display: block;
   width: auto;
-  height: auto;
-  width: 100vw;
   height: 100svh;
-  object-fit: contain;
+  width: 100%;
+  height: 100svh;
+  object-fit: cover;
 }
 
 .canvasOverlay {
@@ -31,27 +31,44 @@
   pointer-events: none;
 }
 
-.objectNutritionData{
+.objectNutritionData {
   background-color: white;
   padding: 3vw 6vw;
   border-radius: 25px;
 }
 
-.overlayBlack{
-  background-color: rgba(0,0,0,0.6);
+.overlayBlack {
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .objectDetected {
-  width: 80vw;
+  width: 95vw;
   color: black;
-  
+
   background-color: white;
   padding: 3vw 6vw;
   border-radius: 25px 25px 0 0;
 }
 
+.languageDiv{
+  background-color: white;
+  padding: 3vw 6vw;
+  border-radius: 0 0 25px 25px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.wrapperError{
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
 @media (max-width: 600px) {
-  .objectNutritionData{
+  .objectNutritionData {
     width: 80vw;
+  }
+
+  .objectDetectedFruit {
+    padding: 20%;
   }
 }

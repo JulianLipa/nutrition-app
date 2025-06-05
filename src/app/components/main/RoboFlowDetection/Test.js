@@ -6,6 +6,7 @@ import style from "@/app/components/main/RoboFlowDetection/RoboFlowDetection.mod
 
 import { FaCircleInfo } from "react-icons/fa6";
 import { CgClose } from "react-icons/cg";
+import { MdOutlineCameraRear } from "react-icons/md";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +23,7 @@ export default function Test() {
   const [itemSelected, setItemSelected] = useState(null);
   const [loadingItemId, setLoadingItemId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [cameraError, setCameraError] = useState(false);
 
   const t = useTranslations("HomePage");
 
@@ -65,36 +67,50 @@ export default function Test() {
     }
   }, [modelWorkerId, isMounted]);
 
-  const startWebcam = () => {
-    const constraints = {
-      audio: false,
-      video: {
-        width: { ideal: 640 },
-        height: { ideal: 480 },
-        facingMode: "environment",
-      },
-    };
-
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then((stream) => {
-        if (videoRef.current && isMounted) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.onloadedmetadata = () => {
-            videoRef.current.play();
-          };
-          videoRef.current.onplay = () => {
-            detecting.current = true;
-            detectFrame();
-          };
-        } else if (stream) {
-          stream.getTracks().forEach((track) => track.stop());
-        }
-      })
-      .catch((error) => {
-        console.error("Error accessing webcam:", error);
-      });
+  const startWebcam = async () => {
+  const constraints = {
+    audio: false,
+    video: {
+      width: { ideal: 640 },
+      height: { ideal: 480 },
+      facingMode: "environment",
+    },
   };
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    setCameraError(false);
+    if (videoRef.current && isMounted) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.onloadedmetadata = () => {
+        videoRef.current.play();
+      };
+      videoRef.current.onplay = () => {
+        detecting.current = true;
+        detectFrame();
+      };
+    } else if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
+  } catch (error) {
+    setCameraError(true);
+
+    // Check for specific error types to provide better user guidance
+    if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+      console.log(
+        "Camera access was denied. Please enable camera permissions in your browser settings to continue."
+      );
+    } else if (error.name === "NotFoundError" || error.name === "DevicesNotFoundError") {
+      console.log("No camera found. Please ensure a camera is connected and recognized by your system.");
+    } else if (error.name === "NotReadableError" || error.name === "TrackStartError") {
+      console.log(
+        "The camera is already in use or cannot be accessed. Please close any other applications using the camera and try again."
+      );
+    } else {
+      console.log("An unexpected error occurred while trying to access the camera. Please try again.");
+    }
+  }
+};
 
   const detectFrame = () => {
     if (!modelWorkerId || !detecting.current || !isMounted) {
@@ -159,6 +175,25 @@ export default function Test() {
   return (
     <div className={style.container}>
       <div className={style.wrapper}>
+        {cameraError && (
+          <section
+            className={`${style.wrapperError} w-full h-svh absolute flex justify-center items-center`}
+          >
+            <div className="bg-white p-5">
+              <div className="flex gap-1 items-center justify-center">
+                <MdOutlineCameraRear className={style.cameraErrorIcon} />
+                <p className={style.cameraErrorMessage}>Error</p>
+              </div>
+              <Link
+                onClick={startWebcam}
+                href={""}
+                className="button flex gap-3 items-center p-4 w-fit relative overflow-hidden rounded-xl"
+              >
+                Retry
+              </Link>
+            </div>
+          </section>
+        )}
         <video
           ref={videoRef}
           className={style.videoElement}
@@ -176,7 +211,7 @@ export default function Test() {
                   href={"#"}
                   onClick={(e) => handleItemSelected(e, item)}
                   key={index}
-                  className="button flex gap-3 items-center p-4 w-fit relative overflow-hidden rounded-xl" // <== importante
+                  className="button flex gap-3 items-center p-4 w-fit relative overflow-hidden rounded-xl"
                 >
                   {loadingItemId === item && (
                     <div
@@ -207,7 +242,7 @@ export default function Test() {
         >
           <div className={`mt-5 z-50 w-1/4 ${style.objectNutritionData}`}>
             <CgClose
-              className="float-right cursor-pointer"
+              className="float-right cursor-pointer text-3xl"
               onClick={() => setItemSelected(null)}
             />
 
@@ -216,12 +251,12 @@ export default function Test() {
               alt="Image"
               width={250}
               height={250}
-              className={""}
+              className={style.objectDetectedFruit}
             />
 
             <div className="text-center mt-5">
               <h1 className="flex gap-1">
-                <p className="font-bold">{t(`${itemSelected.ingredient}`)}</p>
+                <p className="font-bold">{t(`${itemSelected?.ingredient}`)}</p>
               </h1>
 
               <h1 className="flex gap-1">
