@@ -2,10 +2,16 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin();
 
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['spoonacular.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'spoonacular.com',
+        port: '',
+        pathname: '**',
+      },
+    ],
   },
 };
 

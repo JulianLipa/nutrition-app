@@ -235,7 +235,8 @@ export default function RoboFlowDetection() {
                         alt="Loading"
                         width={30}
                         height={30}
-                        className="w-1/2"
+                        className="loading-gif"
+                        unoptimized
                       />
                     </div>
                   )}

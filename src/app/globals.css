@@ -6,9 +6,18 @@
     transition: all .5s ease;
 }
 
+img{
+    width: auto;
+    height: auto;
+}
+
 .button:hover{
     background-color: rgba(0,0,0,0.8);
     color: white;
+}
+
+.loading-gif{
+    width: 50px !important;
 }
 
 .cardComponent{

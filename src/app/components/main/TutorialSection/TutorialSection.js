@@ -121,7 +121,7 @@ const TutorialSection = () => {
         <h1 className="font-bold">{t("languageTitle")}</h1>
 
         <p>{t("nutritional")}</p>
-        <Image src={"/banana.jpg"} alt="Image" width={250} height={250} />
+        <Image src={"/banana.png"} alt="Image" width={250} height={250} />
 
         <div className="flex items-center w-full justify-center">
           <IoIosArrowBack
