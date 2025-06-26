@@ -4,10 +4,14 @@ import { useRouter } from "next/navigation";
 import US from "country-flag-icons/react/3x2/US";
 import ES from "country-flag-icons/react/3x2/ES";
 
+import { useTranslations } from "next-intl";
+
 import style from "@/app/components/main/RoboFlowDetection/RoboFlowDetection.module.css";
 
 export function LanguageSwitcher() {
   const router = useRouter();
+
+  const t = useTranslations("HomePage");
 
   const changeLanguage = async (locale) => {
     document.cookie = `locale=${locale}; path=/`;
@@ -17,7 +21,7 @@ export function LanguageSwitcher() {
   return (
     <div className="flex justify-center">
       <div
-        className={`flex gap-5 justify-center items-center absolute top-0 w-full z-50 ${style.languageDiv}`}
+        className={`flex gap-5 justify-center items-center absolute top-0 w-full z-1000 ${style.languageDiv}`}
       >
         <US
           title="United States"

@@ -3,6 +3,16 @@
     "title": "Detector de comida",
     "loading": "Cargando modelo...",
 
+    "languageTitle": "Antes de comenzar",
+    "language": "1. En la parte superior vas a poder cambiar el idioma",
+    "language2": "2. En la parte inferior, una vez el sistema detecte un alimento, se visualizará un botón para acceder a los valores nutricionales.",
+    "language3-img": "/lang-3-es.gif",
+
+    "language3": "Esta aplicación precisa acceso a su camara, por favor active el Permiso del Navegador",
+    "nutritional": "3. Aquí verás la información nutricional",
+
+    "config": "Selecciona los valores nutricionales que desees",
+
 
     "bitterMelon": "Melón amargo",
     "brinjal": "Berenjena",

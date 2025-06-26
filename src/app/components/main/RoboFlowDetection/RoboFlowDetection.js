@@ -13,7 +13,7 @@ import Image from "next/image";
 
 import { useTranslations } from "next-intl";
 
-export default function Test() {
+export default function RoboFlowDetection() {
   const inferEngine = useMemo(() => new InferenceEngine(), []);
   const [modelWorkerId, setModelWorkerId] = useState(null);
   const [modelLoading, setModelLoading] = useState(false);
@@ -68,49 +68,61 @@ export default function Test() {
   }, [modelWorkerId, isMounted]);
 
   const startWebcam = async () => {
-  const constraints = {
-    audio: false,
-    video: {
-      width: { ideal: 640 },
-      height: { ideal: 480 },
-      facingMode: "environment",
-    },
+    const constraints = {
+      audio: false,
+      video: {
+        width: { ideal: 640 },
+        height: { ideal: 480 },
+        facingMode: "environment",
+      },
+    };
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      setCameraError(false);
+      if (videoRef.current && isMounted) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play();
+        };
+        videoRef.current.onplay = () => {
+          detecting.current = true;
+          detectFrame();
+        };
+      } else if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    } catch (error) {
+      setCameraError(true);
+
+      if (
+        error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError"
+      ) {
+        console.log(
+          "Camera access was denied. Please enable camera permissions in your browser settings to continue."
+        );
+      } else if (
+        error.name === "NotFoundError" ||
+        error.name === "DevicesNotFoundError"
+      ) {
+        console.log(
+          "No camera found. Please ensure a camera is connected and recognized by your system."
+        );
+      } else if (
+        error.name === "NotReadableError" ||
+        error.name === "TrackStartError"
+      ) {
+        console.log(
+          "The camera is already in use or cannot be accessed. Please close any other applications using the camera and try again."
+        );
+      } else {
+        console.log(
+          "An unexpected error occurred while trying to access the camera. Please try again."
+        );
+      }
+    }
   };
-
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    setCameraError(false);
-    if (videoRef.current && isMounted) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.onloadedmetadata = () => {
-        videoRef.current.play();
-      };
-      videoRef.current.onplay = () => {
-        detecting.current = true;
-        detectFrame();
-      };
-    } else if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-    }
-  } catch (error) {
-    setCameraError(true);
-
-    // Check for specific error types to provide better user guidance
-    if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-      console.log(
-        "Camera access was denied. Please enable camera permissions in your browser settings to continue."
-      );
-    } else if (error.name === "NotFoundError" || error.name === "DevicesNotFoundError") {
-      console.log("No camera found. Please ensure a camera is connected and recognized by your system.");
-    } else if (error.name === "NotReadableError" || error.name === "TrackStartError") {
-      console.log(
-        "The camera is already in use or cannot be accessed. Please close any other applications using the camera and try again."
-      );
-    } else {
-      console.log("An unexpected error occurred while trying to access the camera. Please try again.");
-    }
-  }
-};
 
   const detectFrame = () => {
     if (!modelWorkerId || !detecting.current || !isMounted) {
@@ -160,6 +172,7 @@ export default function Test() {
         setLoadingItemId(id);
         const res = await fetch(`/api/getFruitDetails?fruit_name=${id}`);
         const response = await res.json();
+        console.log(response);
         setItemSelected(response);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -186,7 +199,7 @@ export default function Test() {
               </div>
               <Link
                 onClick={startWebcam}
-                href={""}
+                href={"/"}
                 className="button flex gap-3 items-center p-4 w-fit relative overflow-hidden rounded-xl"
               >
                 Retry
@@ -263,6 +276,7 @@ export default function Test() {
                 <p className="font-bold">{t("calories")}:</p>
                 <p className="flex">
                   {itemSelected.nutrition?.calories}
+
                   {itemSelected.nutrition?.unit}
                 </p>
               </h1>

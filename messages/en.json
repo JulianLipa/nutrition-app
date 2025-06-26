@@ -3,6 +3,15 @@
     "title": "Food detector",
     "loading": "Loading model...",
 
+    "languageTitle": "Before starting:",
+    "language": "1. At the top, you’ll be able to change the language.",
+    "language2": "2. At the bottom, once the system detects a food item, a button will appear to access the nutritional values.",
+    "language3-img": "/lang-3-en.gif",
+    "language3": "This app requires access to your camera, please enable the Browser Permission",
+    "nutritional": "3. Then you can see the nutritional informantion",
+
+    "config": "Select the nutritional values you want to see",
+
     "bitterMelon": "Bitter Melon",
     "brinjal": "Brinjal",
     "cabbage": "Cabbage",

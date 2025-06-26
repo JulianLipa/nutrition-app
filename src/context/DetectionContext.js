@@ -6,9 +6,10 @@ const DetectionContext = createContext();
 
 export function DetectionProvider({ children }) {
   const [itemDetected, setItemDetected] = useState([]);
+  const [configData, setConfigData] = useState([]);
 
   return (
-    <DetectionContext.Provider value={{ itemDetected, setItemDetected }}>
+    <DetectionContext.Provider value={{ itemDetected, setItemDetected, configData, setConfigData }}>
       {children}
     </DetectionContext.Provider>
   );
