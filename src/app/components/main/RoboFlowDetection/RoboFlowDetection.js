@@ -133,8 +133,9 @@ export default function RoboFlowDetection() {
     inferEngine
       .infer(modelWorkerId, img)
       .then((predictions) => {
+        console.log(predictions.map((p) => p.class))
         const highConfidenceItems = predictions
-          .filter((p) => p.confidence >= 0.75)
+          .filter((p) => p.confidence >= 0.85)
           .map((p) => p.class);
 
         setItemDetected((prev) => {

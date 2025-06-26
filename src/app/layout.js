@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Food detector",
+  title: "Nutrition App",
   description:
     "Detect the food you point with your camera and access to the nutritional information.",
 };
